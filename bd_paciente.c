@@ -1,4 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//estrutura de um paciente
+
+typedef struct Paciente{
+    int id;
+    char cpf[14];
+    char nome[50];
+    int idade;
+    char data_cadastro[10];         //AAAA-MM-DD (limitado a 10 characteres)
+    struct Paciente *proximo;       //ponteiro para o próximo nó
+} Paciente;
 
 int bd_exist(const char *arch_name){
     FILE *archive = fopen(arch_name, "r");

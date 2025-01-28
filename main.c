@@ -1,55 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bd_paciente.h"
-
-void exibir_menu() {
-    printf("\n--- HealthSys ---\n");
-    printf("1 - Consultar paciente\n");
-    printf("2 - Atualizar paciente\n");
-    printf("3 - Remover paciente\n");
-    printf("4 - Inserir paciente\n");
-    printf("5 - Imprimir lista de pacientes\n");
-    printf("Q - Sair\n");
-    printf("Escolha uma opção: ");
-}
+#include "bd_paciente.c"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "paciente.h"
+#include "paciente.c"
 
 int main() {
-    BDPaciente* bd = criar_bd_paciente();
-    carregar_bd_paciente(bd, "bd_paciente.csv");
-    
-    char opcao;
-    int rodando = 1;
+    Paciente* lista = NULL;  // Lista começa vazia
 
-    while (rodando) {
-        exibir_menu();
-        scanf(" %c", &opcao);
+    // Carrega os pacientes do arquivo CSV
+    carregar_bd_csv("pacientes.csv", &lista);
 
-        switch (opcao) {
-            case '1':
-                consultar_paciente(bd);
-                break;
-            case '2':
-                atualizar_paciente(bd);
-                break;
-            case '3':
-                remover_paciente(bd);
-                break;
-            case '4':
-                inserir_paciente(bd);
-                break;
-            case '5':
-                imprimir_pacientes(bd);
-                break;
-            case 'Q':
-            case 'q':
-                salvar_bd_paciente(bd, "bd_paciente.csv");
-                rodando = 0;
-                break;
-            default:
-                printf("Opção inválida!\n");
-        }
+    // Imprime a lista para verificar se os pacientes foram carregados
+    Paciente* atual = lista;
+    while (atual != NULL) {
+        printf("ID: %d, Nome: %s, CPF: %s, Idade: %d, Data Cadastro: %s\n", atual->id, atual->nome, atual->cpf, atual->idade, atual->data_cadastro);
+        atual = atual->proximo;
     }
 
-    liberar_bd_paciente(bd);
     return 0;
 }

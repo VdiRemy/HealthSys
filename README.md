@@ -20,6 +20,7 @@ Este projeto implementa um **Sistema de Gerenciamento de Pacientes**, que permit
 - **`bd_pacientes.h`**: Declara as funções e estruturas de dados usadas no arquivo bd_paciente.c. Define a interface para interagir com o banco de dados de pacientes.
 - **`bd_paciente.csv`**: Arquivo CSV que armazena os dados dos pacientes.
 - **`README.md`**: Contém a documentação completa do projeto, incluindo instruções de uso, estrutura do repositório, principais decisões de implementação e informações sobre contribuições.
+- **`Makefile`**: automatiza a compilação de projetos em C/C++. Ele define regras para compilar arquivos-fonte (.c) em objetos (.o) e gerar o executável final, facilitando o processo sem precisar digitar comandos manualmente.
 
 ### Passos para Executar
 **1. Clone este repositório:**  

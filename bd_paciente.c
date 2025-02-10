@@ -131,7 +131,7 @@ void atualizar_paciente(BDPaciente *bd) {
     }
 }
 
-/*Reolhe dados do paciente a ser inserido no banco de dados.
+/*Recolhe dados do paciente a ser inserido no banco de dados.
 A função solicita ao usuário que insira manualmente os dados do paciente a ser inserido no banco de dados.
 Então exibe os dados inseridos para confirmação e pede a confirmação do usuário para salvar o registro.
 Em seguida, verifica se o CPF já está cadastrado e se o CPF e a data de cadastro são válidos.

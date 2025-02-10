@@ -131,7 +131,7 @@ void atualizar_paciente(BDPaciente *bd) {
     }
 }
 
-/*Recolhe dados do paciente a ser inserido no banco de dados.
+/*Reolhe dados do paciente a ser inserido no banco de dados.
 A função solicita ao usuário que insira manualmente os dados do paciente a ser inserido no banco de dados.
 Então exibe os dados inseridos para confirmação e pede a confirmação do usuário para salvar o registro.
 Em seguida, verifica se o CPF já está cadastrado e se o CPF e a data de cadastro são válidos.
@@ -223,7 +223,7 @@ void consultar_paciente(BDPaciente *bd) {
     printf("1 - Por CPF\n");
     printf("2 - Por Nome\n");
     printf("3 - Retornar ao menu principal\n");
-
+    printf("Escolha uma opcao: ");
     int opcao;
     scanf("%d", &opcao);
     limpar_buffer(); // Limpa o buffer após ler o número
@@ -240,6 +240,7 @@ void consultar_paciente(BDPaciente *bd) {
         No *atual = bd->inicio;
         while (atual) {
             if (strcmp(atual->paciente.cpf, cpf) == 0) {
+                printf("\n");
                 imprimir_paciente(&atual->paciente);
                 return;
             }
@@ -259,6 +260,7 @@ void consultar_paciente(BDPaciente *bd) {
         No *atual = bd->inicio;
         while (atual) {
             if (strcmp(atual->paciente.nome, nome)==0) {
+                printf("\n");
                 imprimir_paciente(&atual->paciente);
             }
             atual = atual->proximo;
@@ -435,9 +437,9 @@ Paciente* buscar_paciente_por_cpf(BDPaciente *bd, const char *cpf) {
 void imprimir_lista_pacientes(BDPaciente *bd) {
 
     // Imprime o cabeçalho da tabela
-    printf("+----+----------------+---------------------------------------------------+-------+---------------+\n");
-    printf("| ID | CPF            | Nome                                              | Idade | Data Cadastro |\n");
-    printf("+----+----------------+---------------------------------------------------+-------+---------------+\n");
+    printf(" +------+----------------+---------------------------------------------------+-------+---------------+\n");
+    printf(" |  ID  | CPF            | Nome                                              | Idade | Data Cadastro |\n");
+    printf(" +------+----------------+---------------------------------------------------+-------+---------------+\n");
 
     // Percorre a lista encadeada e imprime cada paciente
     No *atual = bd->inicio;
@@ -451,5 +453,5 @@ void imprimir_lista_pacientes(BDPaciente *bd) {
     }
     
     // Linha de rodapé da tabela
-    printf("+----+----------------+---------------------------------------------------+-------+---------------+\n");
+    printf(" +------+----------------+---------------------------------------------------+-------+---------------+\n");
 }

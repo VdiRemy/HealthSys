@@ -13,12 +13,12 @@ OUTPUT = sistema
 
 # Regra para compilar o programa
 $(OUTPUT): $(OBJ)
-    $(CC) -o $(OUTPUT) $(OBJ)    
+	$(CC) -o $(OUTPUT) $(OBJ)  
 
 # Regra para compilar os arquivos .c em .o
 %.o: %.c
-    $(CC) $(CFLAGS) -c $< -o $@    
+	$(CC) $(CFLAGS) -c $< -o $@  
 
 # Limpeza de arquivos temporários
 clean:
-    rm -f $(OBJ) $(OUTPUT)    
+	rm -f $(OBJ) $(OUTPUT)  

@@ -7,7 +7,7 @@ typedef struct {
     char cpf[15];
     char nome[100];
     int idade;
-    char data_cadastro[11];
+    char data_cadastro[10];
 } Paciente;
 
 // Funções para manipulação de pacientes

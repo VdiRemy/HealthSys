@@ -35,14 +35,15 @@ void imprimir_paciente(Paciente *paciente) {
         printf("Paciente não encontrado.\n");
         return;
     }
-
+    // printf("Print dentro da impressao %d\n\n\n", paciente->id);
     // Imprime os dados do paciente
-    printf("| %-2d | %-12s | %-49s | %-4d | %-14s |\n",
-           paciente->id,
-           cpf_formatado,
-           paciente->nome,
-           paciente->idade,
-           paciente->data_cadastro);
+    printf("|%5d  | %s | %-49s | %5d | %s | \n", 
+        paciente->id, 
+        cpf_formatado, 
+        paciente->nome, 
+        paciente->idade, 
+        paciente->data_cadastro);
+ 
 }
 
 /**

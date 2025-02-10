@@ -1,89 +1,74 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "paciente.h"
 
-//cria novo nó
-Paciente* criar_paciente(int id, const char* cpf, const char* nome, int idade, const char* data_cadastro) {
-    Paciente* novo = (Paciente*)malloc(sizeof(Paciente));
-    if (novo == NULL){
-        printf("Erro ao alocar memória!\n");
-        exit(1);
-    }
-    novo->id = id;
-    strcpy(novo->cpf, cpf);
-    strcpy(novo->nome, nome);
-    novo->idade = idade;
-    strcpy(novo->data_cadastro, data_cadastro);
-    novo->proximo = NULL; //o próximo nó é inicializado com vazio
-    return novo;
-}
-//função para inserir novo paciente no final da lista
-void adicionar_paciente(Paciente** lista, Paciente* novo) {
-    if (*lista == NULL) {
-        *lista = novo; //lista vazia, o novo nó será o primeiro
-    }
-    else {
-        Paciente* atual = *lista;
-        while (atual->proximo !=NULL) {  //navega até o último nó
-            atual = atual->proximo;
-            
-        }
-        atual->proximo = novo; //liga o novo nó ao fim da lista
-    }
+/**
+ * Imprime os dados de um paciente.
+ */
+void imprimir_paciente(Paciente *paciente) {
+    printf("ID: %d\n", paciente->id);
+    printf("CPF: %s\n", paciente->cpf);
+    printf("Nome: %s\n", paciente->nome);
+    printf("Idade: %d\n", paciente->idade);
+    printf("Data de Cadastro: %s\n", paciente->data_cadastro);
+    printf("-----------------------------\n");
 }
 
-//função para remover paciente
-void remover_paciente(Paciente** lista, const char* chave, int buscar_por_cpf){
-    Paciente* atual = lista, *anterior = NULL;
+/**
+ Valida um CPF de acordo com o algoritmo oficial.
+ Retorna 1 se o CPF for válido, 0 caso contrário.
+ */
 
-    while (atual != NULL){
-        if ((buscar_por_cpf))
+int validar_cpf(const char *cpf) {
+    // Verifica se o CPF tem 11 dígitos numéricos
+
+    if (strlen(cpf) != 11) return 0;
+    for (int i = 0; i < 11; i++) {
+        if (cpf[i] < '0' || cpf[i] > '9') return 0;
     }
-}
 
-//função para consultar paciente por nome ou cpf
-void consultar_paciente(Paciente* lista, const char* chave, int buscar_por_cpf) {
-    Paciente* atual = lista;
-    int encontrado = 0;
-
-    while (atual != NULL) {
-        if ((buscar_por_cpf && strcmp(atual->cpf, chave) == 0) ||
-        (!buscar_por_cpf && strcmp(atual->nome, chave) == 0)) {
-            printf("ID: %d\n", atual->id);
-            printf("CPF: %s\n", atual->cpf);
-            printf("Nome: %s\n", atual->nome);
-            printf("Idade: %d\n", atual->idade);
-            printf("Data de Cadastro: %s\n", atual->data_cadastro);
-            encontrado = 1;
+    // Verifica se todos os dígitos são iguais (CPF inválido)
+    int todos_iguais = 1;
+    for (int i = 1; i < 11; i++) {
+        if (cpf[i] != cpf[0]) {
+            todos_iguais = 0;
             break;
         }
-        atual = atual->proximo; //passa para o próximo nó
     }
-    if (!encontrado) {
-        printf("Paciente não encontrado,\nverifique os dados inseridos e tente novamente.");
+    if (todos_iguais) return 0;
+
+    // Calcula o primeiro dígito verificador
+    int soma = 0;
+    for (int i = 0; i < 9; i++) {
+        soma += (cpf[i] - '0') * (10 - i);
     }
+    int resto = soma % 11;
+    int digito1 = (resto < 2) ? 0 : 11 - resto;
+
+    // Calcula o segundo dígito verificador
+    soma = 0;
+    for (int i = 0; i < 10; i++) {
+        soma += (cpf[i] - '0') * (11 - i);
+    }
+    resto = soma % 11;
+    int digito2 = (resto < 2) ? 0 : 11 - resto;
+
+    // Verifica os dígitos verificadores
+    if ((cpf[9] - '0') != digito1 || (cpf[10] - '0') != digito2) {
+        return 0;
+    }
+
+    return 1; // CPF válido
 }
 
-//função para imprimir todos os pacientes
-void imprimir_todos_pacientes(Paciente* lista){
-    Paciente* atual = lista;
-    while (atual != NULL){
-        printf("ID: %d, CPF: %s, Nome: %s, Idade: %d, Data: %s\n",
-        atual->id, atual->cpf, atual->nome, atual->idade, atual->data_cadastro);
-        atual = atual->proximo; //avança para o proximo nó
+int validar_data(const char *data){
+    if (strlen(data) != 10) return 0;
+    if (data[4] != '-' || data[7] != '-') return 0;
+    for (int i = 0; i < 10; i++) {
+        //pular hífen
+        if (i == 4 || i == 7) continue;
+        //verificar se é número
+        if (data[i] < '0' || data[i] > '9') return 0;
     }
-}
-
-
-
-//funcao para liberar memória alocada para lista
-
-void liberar_lista(Paciente* lista) {
-    Paciente* atual = lista;
-    while (atual != NULL){
-        Paciente* temp = atual;
-        atual = atual->proximo;
-        free(temp);
-    }
+    return 1;
 }

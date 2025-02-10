@@ -9,13 +9,16 @@ Este projeto implementa um **Sistema de Gerenciamento de Pacientes**, que permit
 - Um editor de texto ou IDE para visualizar e modificar o código.
 
 ### Descrição dos Diretórios e Arquivos
-- **`main.c`**: Código principal do programa. Contém o menu interativo que permite ao usuário realizar operações como cadastrar, consultar, atualizar e remover pacientes. Também chama as funções implementadas em outros arquivos.
-- **`paciente.c`**:Implementa as funções relacionadas à manipulação individual de pacientes. Isso inclui operações como criar um novo paciente, validar CPF, formatar dados e exibir informações.
-- **`paciente.h`**: Declara as funções e estruturas de dados usadas no arquivo paciente.c. Define a interface para interagir com os dados de um paciente individual.
-- **`bd_paciente.c`**: Implementa as funções relacionadas ao gerenciamento do banco de dados de pacientes. Inclui operações como carregar dados do arquivo CSV (bd_paciente.csv), salvar dados no arquivo e manipular a lista encadeada
-- **`bd_pacientes.h`**: Declara as funções e estruturas de dados usadas no arquivo bd_paciente.c. Define a interface para interagir com o banco de dados de pacientes.
-- **`bd_paciente.csv`**: Arquivo CSV que armazena os dados dos pacientes.
-- **`README.md`**: Contém a documentação completa do projeto, incluindo instruções de uso, estrutura do repositório, principais decisões de implementação e informações sobre contribuições.
+- **main.c**: Código principal do programa. Contém o menu interativo que permite ao usuário realizar operações como cadastrar, consultar, atualizar e remover pacientes. Também chama as funções implementadas em outros arquivos.
+- **menu.c**: Implementa principais funcionalidades utilizadas no sistema menu.
+- **menu.h**: Declara as funções e estruturas do arquivo menu.c
+- **funcionalidade.c**:Implementa as funções relacionadas à manipulação de dados do sistema no geral. Isso inclui operações como validar CPF, formatar dados, limpar buffer e validar a data.
+- **funcionalidade.h**: Declara as funções e estruturas de dados usadas no arquivo funcionalidade.c. Define a interface para interagir com os dados de um paciente individual.
+- **bd_paciente.c**: Implementa as funções relacionadas ao gerenciamento do banco de dados de pacientes. Inclui operações como carregar dados do arquivo CSV (bd_paciente.csv), salvar dados no arquivo e manipular a lista encadeada.
+- **bd_pacientes.h**: Declara as funções e estruturas de dados usadas no arquivo bd_paciente.c. Define a interface para interagir com o banco de dados de pacientes.
+- **bd_paciente.csv**: Arquivo CSV que armazena os dados dos pacientes.
+- **'README.md'**: Contém a documentação completa do projeto, incluindo instruções de uso, estrutura do repositório, principais decisões de implementação e informações sobre contribuições.
+- **Makefile**: automatiza a compilação de projetos em C/C++. Ele define regras para compilar arquivos-fonte (.c) em objetos (.o) e gerar o executável final, facilitando o processo sem precisar digitar comandos manualmente.
 
 ### Passos para Executar
 **1. Clone este repositório:**  
@@ -53,36 +56,45 @@ CPF (apenas dígitos), nome, idade e data de cadastro (AAAA-MM-DD). E o id será
 
 ### Principais TADs usadas:
 **1. Estrutura do Paciente:**   
-A estrutura Paciente representa os dados de um paciente no sistema
+A estrutura Paciente representa os dados de um paciente no sistema.
 
 **2. A lista encadeada**
 
    **- A estrutura No:**    
-   A estrutura No representa um nó da lista encadeada. Cada nó contém um registro de Paciente e um ponteiro para o próximo nó
+   A estrutura No representa um nó da lista encadeada. Cada nó contém um registro de Paciente e um ponteiro para o próximo nó.
 
    **- A estrutura BDPaciente:**  
-   A estrutura BDPaciente representa o banco de dados de pacientes. Ela contém um ponteiro para o início da lista encadeada e o tamanho total do banco de dados
+   A estrutura BDPaciente representa o banco de dados de pacientes. Ela contém um ponteiro para o início da lista encadeada e o tamanho total do banco de dados.
 
 ### Principais Decisões de Implementação:
 1.**Dados**  
 Os dados são salvos em um arquivo CSV (bd_paciente.csv) para garantir persistência entre execuções do programa.  
 O arquivo CSV segue o formato:  
-**ID, CPF, Nome, Idade, Data_Cadastro**  
-1, 123.456.789-09, João Silva, 45, 2024-12-01  
-2,987.654.321-00, Maria Oliveira, 30, 2024-12-02
+|ID | CPF             | NOME            | IDADE | Data_cadastro |
+|---|-----------------|-----------------|-------|---------------|
+| 1 | 123.456.789-09  | João Silva      | 20    | 2024-12-01    |
+| 2 | 987.654.321-00  | Maria Oliveira  | 25    | 2024-12-02    | 
 
-As funções utilizadas para a manipulação do banco de dados são: inicializar_bd, carregar_bd_csv, salvar_bd_csv
+As funções utilizadas para a manipulação do banco de dados são: inicializar_bd, carregar_bd_csv, salvar_bd_csv.
 
 2. **Lista Encadeada**  
 A lista encadeada foi escolhida como estrutura de dados principal porque:  
 Permite inserções rápidas no início da lista.  
 É dinâmica, permitindo que o número de pacientes cresça ou diminua sem limitações fixas.
+As funções que manipulam listas são: remover_paciente_confirmacao, atualizar_paciente, inserir_paciente_manual, consultar_paciente, inicializar_bd, carregar_bd_csv, salvar_bd_csv,
+inserir_paciente,
+remover_paciente,
+buscar_paciente_por_id,
+buscar_paciente_por_cpf,
+imprimir_lista_pacientes,
+liberar_bd.
 
 4. **Validação de Dados e Formatação de entrada**   
 O CPF é validado antes de ser salvo no sistema. Isso garante que apenas CPFs válidos sejam armazenados.  
-A função validar_cpf verifica se o CPF tem 11 dígitos e segue regras básicas de validação.
-A função validar_data verifica se a data de cadastro está de acordo com a forma solicitada na entrada.
-A função limpar_buffer ajuda a evitar problemas com caracteres residuais no buffer. Assim, o sistema nao interpreta nenhuma entrada indesejada do scanf
+A função validar_cpf verifica se o CPF tem 11 dígitos e segue regras básicas de validação.  
+A função validar_data verifica se a data de cadastro está de acordo com a forma solicitada na entrada.  
+A função limpar_buffer ajuda a evitar problemas com caracteres residuais no buffer. Assim, o sistema nao interpreta nenhuma entrada indesejada do scanf.
+f_confirmacao é a função para o usuario confirmar ou não, com S ou N, as ações inseridas.
 
 6. **Formatação de Saída**  
 O CPF é formatado automaticamente no padrão XXX.XXX.XXX-XX para melhor legibilidade.  

@@ -2,17 +2,34 @@
 #include <string.h>
 #include "paciente.h"
 
+
 /**
  * Imprime os dados de um paciente.
  */
 void imprimir_paciente(Paciente *paciente) {
-    printf("ID: %d\n", paciente->id);
-    printf("CPF: %s\n", paciente->cpf);
-    printf("Nome: %s\n", paciente->nome);
-    printf("Idade: %d\n", paciente->idade);
-    printf("Data de Cadastro: %s\n", paciente->data_cadastro);
-    printf("-----------------------------\n");
+    if (!paciente) {
+        printf("Paciente não encontrado.\n");
+        return;
+    }
+
+    // Formata o CPF no padrão XXX.XXX.XXX-XX
+    char cpf_formatado[15];
+    snprintf(cpf_formatado, sizeof(cpf_formatado), "%.3s.%.3s.%.3s-%.2s",
+             paciente->cpf, paciente->cpf + 3,
+             paciente->cpf + 6, paciente->cpf + 9);
+
+    // Imprime o cabeçalho
+    printf("ID\tCPF\t\tNome\t\tIdade\tData_Cadastro\n");
+
+    // Imprime os dados do paciente
+    printf("%d\t%s\t%-15s\t%d\t%s\n",
+           paciente->id,
+           cpf_formatado,
+           paciente->nome,
+           paciente->idade,
+           paciente->data_cadastro);
 }
+
 
 /**
  Valida um CPF de acordo com o algoritmo oficial.

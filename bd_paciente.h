@@ -15,6 +15,11 @@ typedef struct {
 
 //funções 
 
+void limpar_buffer();
+void remover_paciente_confirmacao(BDPaciente *bd);
+void atualizar_paciente(BDPaciente *bd);
+void inserir_paciente_manual(BDPaciente *bd);
+void consultar_paciente(BDPaciente *bd);
 void inicializar_bd(BDPaciente *bd);
 void carregar_bd_csv(BDPaciente *bd, const char *arquivo);
 void salvar_bd_csv(BDPaciente *bd, const char *arquivo);

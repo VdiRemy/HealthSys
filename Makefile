@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -g -Iinclude
 
 # Arquivos fonte (use caminhos relativos)
-SRC = main.c funcionalidade.c bd_paciente.c utils.c
+SRC = main.c funcionalidade.c bd_paciente.c menu.c
 
 # Arquivos objeto (substitui a extensão .c por .o)
 OBJ = $(SRC:.c=.o)

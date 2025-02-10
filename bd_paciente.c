@@ -2,17 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bd_paciente.h"
+#include "funcionalidade.h"
 
-//limpando o buffer para nao dar erro de ficar algum caracter
-void limpar_buffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
 
-}
-
-void remover_paciente_confirmacao(BDPaciente *bd) {
-
-    // Imprime toda a lista de pacientes
+/* 
+Remove paciente do banco de dados com confirmação
+A função imprime a lista de pacientes atual, então solicita o ID do paciente a ser removido.
+*/
+void dados_pacientes_a_remover(BDPaciente *bd) {
+    // Imprime toda a lista de pacientes    
     printf("Lista de pacientes:\n");
     imprimir_lista_pacientes(bd);
 
@@ -21,12 +19,12 @@ void remover_paciente_confirmacao(BDPaciente *bd) {
     scanf("%d", &id);
     limpar_buffer(); // Limpa o buffer após ler o número
 
+    // Busca o paciente pelo ID
     Paciente *paciente = buscar_paciente_por_id(bd, id);
     if (!paciente) {
         printf("Paciente nao encontrado.\n");
         return;
     }
-
 
     printf("Tem certeza de que deseja excluir este registro? (S/N): ");
     char confirmacao;
@@ -41,6 +39,8 @@ void remover_paciente_confirmacao(BDPaciente *bd) {
     }
 }
 
+/*Atualiza o paciente no banco de dados.
+Por meio do Id do paciente, o dado a ser atualizado é modificado diretamente na lista encadeada*/
 void atualizar_paciente(BDPaciente *bd) {
     // Passo 1: Imprime toda a lista de pacientes
     printf("Lista de pacientes:\n");
@@ -75,8 +75,8 @@ void atualizar_paciente(BDPaciente *bd) {
     scanf(" %[^\n]", entrada_nome);
     limpar_buffer();
 
-    printf("Idade (ou -1 para manter): ");
-    scanf("%s", entrada_idade_str); // Lê como string para aceitar '-'
+    printf("Idade (ou - para manter): ");
+    scanf("%s", entrada_idade_str);
     limpar_buffer();
 
     printf("Data_Cadastro (AAAA-MM-DD, ou '-' para manter): ");
@@ -131,7 +131,13 @@ void atualizar_paciente(BDPaciente *bd) {
     }
 }
 
-void inserir_paciente_manual(BDPaciente *bd) {
+/*Reolhe dados do paciente a ser inserido no banco de dados.
+A função solicita ao usuário que insira manualmente os dados do paciente a ser inserido no banco de dados.
+Então exibe os dados inseridos para confirmação e pede a confirmação do usuário para salvar o registro.
+Em seguida, verifica se o CPF já está cadastrado e se o CPF e a data de cadastro são válidos.
+Se todas as verificações forem bem-sucedidas, o paciente é inserido no banco de dados através da função inserir_paciente.
+*/
+void dados_pacientes_a_inserir(BDPaciente *bd) {
 
     // Passo 1: Solicita as informações do paciente
     printf("Para inserir um novo registro, digite os valores para os campos CPF (apenas digitos), Nome, Idade e Data_Cadastro:\n");
@@ -206,11 +212,15 @@ void inserir_paciente_manual(BDPaciente *bd) {
     }
 }
 
+/*Consulta o paciente no banco de dados
+Fornece ao usuario opcoes onde é possível escolher por qual método vai ser feita a consulta.
+O usuário pode escolher entre consultar por ID, CPF ou Nome.
+Com base na opção, é executada a função para realizar a busca dentro da lista encadeada de pacientes.
+*/
 void consultar_paciente(BDPaciente *bd) {
     //opções para consultar o apciente no banco
     printf("Escolha o modo de consulta:\n");
-    printf("1 - Por ID\n");
-    printf("2 - Por CPF\n");
+    printf("1 - Por CPF\n");
     printf("2 - Por Nome\n");
     printf("3 - Retornar ao menu principal\n");
 
@@ -219,20 +229,6 @@ void consultar_paciente(BDPaciente *bd) {
     limpar_buffer(); // Limpa o buffer após ler o número
 
     if (opcao == 1) {
-        //recebe o id do paciente
-        int id;
-        printf("Digite o ID: ");
-        scanf("%d", &id);
-        limpar_buffer(); // Limpa o buffer após ler o número
-
-        // Busca o paciente pelo ID
-        Paciente *paciente = buscar_paciente_por_id(bd, id);
-        if (paciente) {
-            imprimir_paciente(paciente);
-        } else {
-            printf("Paciente nao encontrado.\n");
-        }
-    } else if (opcao == 2) {
         //recebe o cpf do paciente 
         char cpf[15];
         printf("Digite o CPF: ");
@@ -251,7 +247,7 @@ void consultar_paciente(BDPaciente *bd) {
         }
         printf("Paciente nao encontrado.\n");
 
-    } else if (opcao == 3) {
+    } else if (opcao == 2) {
 
         //recebe o nome
         char nome[100];
@@ -311,7 +307,11 @@ void carregar_bd_csv(BDPaciente *bd, const char *arquivo) {
     fclose(fp); //fecha o arquivo
 }
 
-//salvando o banco, função que é utilizada apos o fechamento do sistema
+/*Salvando o banco, função que é utilizada apos o fechamento do sistema
+ Esta função imprime uma tabela formatada contendo os dados de todos os pacientes
+ presentes na lista encadeada do banco de dados. A tabela inclui as colunas ID, CPF,
+ Nome, Idade e Data de Cadastro.
+ */
 void salvar_bd_csv(BDPaciente *bd, const char *arquivo) {
 
     // Tenta abrir o arquivo CSV em modo de escrita ("w").
@@ -347,6 +347,9 @@ void salvar_bd_csv(BDPaciente *bd, const char *arquivo) {
     printf("Dados salvos com sucesso no arquivo '%s'.\n", arquivo);
 }
 
+/*
+Libera espaço ocupado pela lista encadeada do banco de dados.
+*/
 void liberar_bd(BDPaciente *bd) {
     No *atual = bd->inicio; // Começa pelo primeiro nó da lista
     while (atual) {
@@ -358,7 +361,7 @@ void liberar_bd(BDPaciente *bd) {
     bd->tamanho = 0;            // Reseta o tamanho do banco de dados
 }
 
-//Insere um novo paciente no início da lista encadeada do banco de dados.
+/*Insere um novo paciente, ja dentro de uma estrutura, no início da lista encadeada do banco de dados.*/
 void inserir_paciente(BDPaciente *bd, Paciente paciente) {
     No *novo_no = (No *)malloc(sizeof(No));
 
@@ -373,7 +376,7 @@ void inserir_paciente(BDPaciente *bd, Paciente paciente) {
     bd->tamanho++;
 }
 
-//Remove um paciente da lista encadeada com base no ID fornecido
+/*Remove um paciente da lista encadeada com base no ID fornecido*/
 void remover_paciente(BDPaciente *bd, int id) {
     No *anterior = NULL;
     No *atual = bd->inicio;
@@ -410,6 +413,7 @@ Paciente* buscar_paciente_por_id(BDPaciente *bd, int id) {
     return NULL;
 }
 
+//Busca um paciente na lista encadeada com base no CPF fornecido.
 Paciente* buscar_paciente_por_cpf(BDPaciente *bd, const char *cpf) {
     No *atual = bd->inicio;
 
@@ -427,32 +431,25 @@ Paciente* buscar_paciente_por_cpf(BDPaciente *bd, const char *cpf) {
     return NULL;
 }
 
-//imprimir a lista dos pacientes
+/*Imprimir a lista completa dos pacientes*/
 void imprimir_lista_pacientes(BDPaciente *bd) {
-    // Imprime o cabeçalho
-    printf("ID\tCPF\t\tNome\t\tIdade\tData_Cadastro\n");
+
+    // Imprime o cabeçalho da tabela
+    printf("+----+----------------+---------------------------------------------------+-------+---------------+\n");
+    printf("| ID | CPF            | Nome                                              | Idade | Data Cadastro |\n");
+    printf("+----+----------------+---------------------------------------------------+-------+---------------+\n");
 
     // Percorre a lista encadeada e imprime cada paciente
     No *atual = bd->inicio;
     while (atual) {
 
-        // Formata o CPF no padrão XXX.XXX.XXX-XX
-        char cpf_formatado[15]; 
-
-        //snfprint formata uma string e armazena em um buffer.
-        snprintf(cpf_formatado, sizeof(cpf_formatado), "%.3s.%.3s.%.3s-%.2s",
-                 atual->paciente.cpf, atual->paciente.cpf + 3,
-                 atual->paciente.cpf + 6, atual->paciente.cpf + 9);
-
         // Imprime os dados do paciente
-        printf("%d\t%s\t%-15s\t%d\t%s\n",
-               atual->paciente.id,
-               cpf_formatado,
-               atual->paciente.nome,
-               atual->paciente.idade,
-               atual->paciente.data_cadastro);
+        imprimir_paciente(&atual->paciente);
 
         // Avança para o próximo nó
         atual = atual->proximo;
     }
+    
+    // Linha de rodapé da tabela
+    printf("+----+----------------+---------------------------------------------------+-------+---------------+\n");
 }
